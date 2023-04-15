@@ -8,8 +8,8 @@ description = "SHA256 verification circuit in halo2 supporting dynamic length in
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-halo2wrong = { git = "https://github.com/privacy-scaling-explorations/halo2wrong", version = "0.1.0", rev = "63bde545d934e69c806ef9bc8b18f03f6ec0fe8e" }
-maingate = { git = "https://github.com/privacy-scaling-explorations/halo2wrong", version = "0.1.0", rev = "63bde545d934e69c806ef9bc8b18f03f6ec0fe8e" }
+halo2wrong = { git = "https://github.com/privacy-scaling-explorations/halo2wrong", version = "0.1.0" }
+maingate = { git = "https://github.com/privacy-scaling-explorations/halo2wrong", version = "0.1.0" }
 
 [dev-dependencies]
 criterion = "0.3"
