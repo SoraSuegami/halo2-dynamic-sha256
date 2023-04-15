@@ -118,7 +118,7 @@ impl<F: FieldExt> Sha256Chip<F> {
     pub fn finalize(
         &mut self,
         layouter: &mut impl Layouter<F>,
-        inputs: &[Value<u8>],
+        inputs: &[u8],
     ) -> Result<(AssignedDigest<F>, Vec<AssignedValue<F>>), Error> {
         let input_byte_size = inputs.len();
         assert!(input_byte_size <= self.config.max_byte_size);
@@ -207,7 +207,10 @@ impl<F: FieldExt> Sha256Chip<F> {
             },
         )?;
 
-        let mut padded_inputs = inputs.to_vec();
+        let mut padded_inputs = inputs
+            .into_iter()
+            .map(|byte| Value::known(*byte))
+            .collect::<Vec<Value<u8>>>();
         padded_inputs.push(Value::known(0x80));
         for _ in 0..zero_padding_byte_size {
             padded_inputs.push(Value::known(0));
@@ -638,7 +641,7 @@ mod test {
     use rand::rngs::OsRng;
 
     struct TestCircuit<F: FieldExt> {
-        test_input: Vec<Value<u8>>,
+        test_input: Vec<u8>,
         _f: PhantomData<F>,
     }
 
@@ -696,11 +699,7 @@ mod test {
         let k = 17;
 
         // Test vector: "abc"
-        let test_input = vec![
-            Value::known('a' as u8),
-            Value::known('b' as u8),
-            Value::known('c' as u8),
-        ];
+        let test_input = vec!['a' as u8, 'b' as u8, 'c' as u8];
 
         let circuit = TestCircuit::<Base> {
             test_input,
@@ -728,7 +727,7 @@ mod test {
         let k = 17;
 
         // Test vector: "0x0"
-        let test_input = vec![Value::known(0u8)];
+        let test_input = vec![0u8];
 
         let circuit = TestCircuit::<Base> {
             test_input,
@@ -753,68 +752,7 @@ mod test {
 
         let k = 17;
 
-        let test_input = vec![
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-            Value::known(0x1),
-        ];
+        let test_input = vec![0x1; 60];
 
         let circuit = TestCircuit::<Base> {
             test_input,
